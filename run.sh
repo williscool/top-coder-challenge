@@ -33,6 +33,4 @@ fi
 
 yarn
 
-# Run the TypeScript CLI directly with ts-node
-# This calls our calculator implementation
-yarn ts-node src/cli.ts "$1" "$2" "$3" 
+yarn start "$1" "$2" "$3" 

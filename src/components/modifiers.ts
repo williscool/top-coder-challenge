@@ -1,4 +1,4 @@
-import { CalculationParameters } from '../constants';
+import {CalculationParameters} from '../constants';
 
 /**
  * Apply special bonuses and modifiers
@@ -8,7 +8,7 @@ export function applySpecialBonuses(
   days: number,
   miles: number,
   receipts: number,
-  parameters: CalculationParameters
+  parameters: CalculationParameters,
 ): number {
   let finalAmount = amount;
 
@@ -33,13 +33,13 @@ export function applySpecialBonuses(
 function calculateFiveDayBonus(
   miles: number,
   receipts: number,
-  parameters: CalculationParameters
+  parameters: CalculationParameters,
 ): number {
   let bonus = parameters.specialBonuses.fiveDayBonus;
 
   // Efficiency affects the bonus amount
   const efficiency = miles / 5;
-  
+
   if (efficiency >= 180 && efficiency <= 220) {
     // Kevin's sweet spot gets maximum bonus
     bonus *= 1.5;
@@ -69,11 +69,7 @@ function calculateFiveDayBonus(
 /**
  * Apply duration-specific modifiers that aren't captured in base calculation
  */
-export function applyDurationModifiers(
-  amount: number,
-  days: number,
-  parameters: CalculationParameters
-): number {
+export function applyDurationModifiers(amount: number, days: number): number {
   let modifiedAmount = amount;
 
   // Weekend overlap bonus (implied from patterns)
@@ -104,15 +100,11 @@ export function hasLongTripPenalty(days: number): boolean {
 /**
  * Get a description of applied modifiers
  */
-export function getModifierDescription(
-  days: number,
-  miles: number,
-  receipts: number
-): string[] {
+export function getModifierDescription(days: number, miles: number): string[] {
   const modifiers: string[] = [];
 
   if (days === 5) {
-    modifiers.push('5-day trip bonus (Lisa\'s observation)');
+    modifiers.push("5-day trip bonus (Lisa's observation)");
   }
 
   if (days >= 8) {
@@ -125,8 +117,8 @@ export function getModifierDescription(
 
   const efficiency = miles / days;
   if (efficiency >= 180 && efficiency <= 220 && days === 5) {
-    modifiers.push('Enhanced 5-day bonus (Kevin\'s sweet spot)');
+    modifiers.push("Enhanced 5-day bonus (Kevin's sweet spot)");
   }
 
   return modifiers;
-} 
+}

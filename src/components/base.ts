@@ -1,4 +1,4 @@
-import { CalculationParameters } from '../constants';
+import {CalculationParameters} from '../constants';
 
 /**
  * Calculate the base component of reimbursement
@@ -6,7 +6,7 @@ import { CalculationParameters } from '../constants';
  */
 export function calculateBaseComponent(
   days: number,
-  parameters: CalculationParameters
+  parameters: CalculationParameters,
 ): number {
   // Determine duration category for multiplier lookup
   let durationKey: string;
@@ -23,11 +23,13 @@ export function calculateBaseComponent(
   }
 
   // Get the appropriate multiplier
-  const multiplier = parameters.durationMultipliers[durationKey] || parameters.durationMultipliers['8+'];
-  
+  const multiplier =
+    parameters.durationMultipliers[durationKey] ||
+    parameters.durationMultipliers['8+'];
+
   // Calculate base component
   const baseComponent = parameters.baseRatePerDay * days * multiplier;
-  
+
   return baseComponent;
 }
 
@@ -40,4 +42,4 @@ export function getDurationCategory(days: number): string {
   if (days === 5) return '5-day special';
   if (days >= 6 && days <= 7) return '6-7 days';
   return '8+ days (penalty)';
-} 
+}

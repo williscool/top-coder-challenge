@@ -1,9 +1,23 @@
-import { CalculationParameters, DEFAULT_PARAMETERS } from './constants';
-import { calculateBaseComponent, getDurationCategory } from './components/base';
-import { calculateMileageComponent, getMileageBreakdown } from './components/mileage';
-import { calculateReceiptComponent, getReceiptEfficiencyCategory } from './components/receipts';
-import { calculateEfficiencyBonus, getEfficiencyCategory, isInKevinsSweetSpot } from './components/efficiency';
-import { applySpecialBonuses, applyDurationModifiers, getModifierDescription } from './components/modifiers';
+import {CalculationParameters, DEFAULT_PARAMETERS} from './constants';
+import {calculateBaseComponent, getDurationCategory} from './components/base';
+import {
+  calculateMileageComponent,
+  getMileageBreakdown,
+} from './components/mileage';
+import {
+  calculateReceiptComponent,
+  getReceiptEfficiencyCategory,
+} from './components/receipts';
+import {
+  calculateEfficiencyBonus,
+  getEfficiencyCategory,
+  isInKevinsSweetSpot,
+} from './components/efficiency';
+import {
+  applySpecialBonuses,
+  applyDurationModifiers,
+  getModifierDescription,
+} from './components/modifiers';
 
 export interface CalculationBreakdown {
   input: {
@@ -45,7 +59,7 @@ export class ReimbursementCalculator {
   public calculateReimbursement(
     days: number,
     miles: number,
-    receipts: number
+    receipts: number,
   ): number {
     // Input validation
     if (days <= 0 || miles < 0 || receipts < 0) {
@@ -59,19 +73,27 @@ export class ReimbursementCalculator {
     const mileageComponent = calculateMileageComponent(miles, this.parameters);
 
     // 3. Calculate Receipt Component
-    const receiptComponent = calculateReceiptComponent(receipts, days, this.parameters);
+    const receiptComponent = calculateReceiptComponent(
+      receipts,
+      days,
+      this.parameters,
+    );
 
     // 4. Calculate subtotal before efficiency bonus
     const subtotal = baseComponent + mileageComponent + receiptComponent;
 
     // 5. Apply Efficiency Bonus
-    const efficiencyBonus = calculateEfficiencyBonus(miles, days, subtotal, this.parameters);
+    const efficiencyBonus = calculateEfficiencyBonus(
+      miles,
+      days,
+      subtotal,
+      this.parameters,
+    );
 
     // 6. Apply Duration Modifiers
     const withDurationModifiers = applyDurationModifiers(
       subtotal + efficiencyBonus,
       days,
-      this.parameters
     );
 
     // 7. Apply Special Bonuses
@@ -80,7 +102,7 @@ export class ReimbursementCalculator {
       days,
       miles,
       receipts,
-      this.parameters
+      this.parameters,
     );
 
     // 8. Round to 2 decimal places
@@ -93,52 +115,63 @@ export class ReimbursementCalculator {
   public getCalculationBreakdown(
     days: number,
     miles: number,
-    receipts: number
+    receipts: number,
   ): CalculationBreakdown {
     // Calculate components
     const baseComponent = calculateBaseComponent(days, this.parameters);
     const mileageComponent = calculateMileageComponent(miles, this.parameters);
-    const receiptComponent = calculateReceiptComponent(receipts, days, this.parameters);
+    const receiptComponent = calculateReceiptComponent(
+      receipts,
+      days,
+      this.parameters,
+    );
     const subtotal = baseComponent + mileageComponent + receiptComponent;
-    const efficiencyBonus = calculateEfficiencyBonus(miles, days, subtotal, this.parameters);
-    
+    const efficiencyBonus = calculateEfficiencyBonus(
+      miles,
+      days,
+      subtotal,
+      this.parameters,
+    );
+
     const withDurationModifiers = applyDurationModifiers(
       subtotal + efficiencyBonus,
       days,
-      this.parameters
     );
-    
+
     const finalAmount = applySpecialBonuses(
       withDurationModifiers,
       days,
       miles,
       receipts,
-      this.parameters
+      this.parameters,
     );
-    
-    const modifiers = (withDurationModifiers - subtotal - efficiencyBonus) + 
-                     (finalAmount - withDurationModifiers);
+
+    const modifiers =
+      withDurationModifiers -
+      subtotal -
+      efficiencyBonus +
+      (finalAmount - withDurationModifiers);
 
     return {
-      input: { days, miles, receipts },
+      input: {days, miles, receipts},
       components: {
         base: baseComponent,
         mileage: mileageComponent,
         receipts: receiptComponent,
         efficiency: efficiencyBonus,
-        modifiers: modifiers
+        modifiers: modifiers,
       },
       categories: {
         duration: getDurationCategory(days),
         efficiency: getEfficiencyCategory(miles, days),
-        receipts: getReceiptEfficiencyCategory(receipts)
+        receipts: getReceiptEfficiencyCategory(receipts),
       },
       analysis: {
         efficiencyRatio: miles / days,
         isInKevinsSweetSpot: isInKevinsSweetSpot(miles, days),
-        appliedModifiers: getModifierDescription(days, miles, receipts)
+        appliedModifiers: getModifierDescription(days, miles),
       },
-      total: Math.round(finalAmount * 100) / 100
+      total: Math.round(finalAmount * 100) / 100,
     };
   }
 
@@ -146,14 +179,14 @@ export class ReimbursementCalculator {
    * Update calculation parameters for tuning
    */
   public updateParameters(newParameters: Partial<CalculationParameters>): void {
-    this.parameters = { ...this.parameters, ...newParameters };
+    this.parameters = {...this.parameters, ...newParameters};
   }
 
   /**
    * Get current parameters
    */
   public getParameters(): CalculationParameters {
-    return { ...this.parameters };
+    return {...this.parameters};
   }
 
   /**
@@ -164,8 +197,8 @@ export class ReimbursementCalculator {
     miles: number,
     receipts: number,
     expected: number,
-    tolerance: number = 0.01
-  ): { isMatch: boolean; error: number; breakdown: CalculationBreakdown } {
+    tolerance = 0.01,
+  ): {isMatch: boolean; error: number; breakdown: CalculationBreakdown} {
     const calculated = this.calculateReimbursement(days, miles, receipts);
     const error = Math.abs(calculated - expected);
     const breakdown = this.getCalculationBreakdown(days, miles, receipts);
@@ -173,7 +206,7 @@ export class ReimbursementCalculator {
     return {
       isMatch: error <= tolerance,
       error: error,
-      breakdown: breakdown
+      breakdown: breakdown,
     };
   }
-} 
+}

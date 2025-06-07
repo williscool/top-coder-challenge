@@ -1,4 +1,4 @@
-import { CalculationParameters } from '../constants';
+import {CalculationParameters} from '../constants';
 
 /**
  * Calculate the mileage component using tiered rates
@@ -6,7 +6,7 @@ import { CalculationParameters } from '../constants';
  */
 export function calculateMileageComponent(
   miles: number,
-  parameters: CalculationParameters
+  parameters: CalculationParameters,
 ): number {
   let mileageComponent = 0;
   let remainingMiles = miles;
@@ -16,15 +16,16 @@ export function calculateMileageComponent(
     if (remainingMiles <= 0) break;
 
     // Calculate miles in this tier
-    const maxMilesInTier = tier.max === Infinity 
-      ? remainingMiles 
-      : Math.min(remainingMiles, tier.max - tier.min + 1);
-    
+    const maxMilesInTier =
+      tier.max === Infinity
+        ? remainingMiles
+        : Math.min(remainingMiles, tier.max - tier.min + 1);
+
     const milesInTier = Math.min(remainingMiles, maxMilesInTier);
-    
+
     // Add cost for this tier
     mileageComponent += milesInTier * tier.rate;
-    
+
     // Reduce remaining miles
     remainingMiles -= milesInTier;
   }
@@ -38,10 +39,10 @@ export function calculateMileageComponent(
  */
 export function getEffectiveMileageRate(
   miles: number,
-  parameters: CalculationParameters
+  parameters: CalculationParameters,
 ): number {
   if (miles === 0) return 0;
-  
+
   const totalMileageCost = calculateMileageComponent(miles, parameters);
   return totalMileageCost / miles;
 }
@@ -51,19 +52,25 @@ export function getEffectiveMileageRate(
  */
 export function getMileageBreakdown(
   miles: number,
-  parameters: CalculationParameters
+  parameters: CalculationParameters,
 ): Array<{tier: number; miles: number; rate: number; cost: number}> {
-  const breakdown: Array<{tier: number; miles: number; rate: number; cost: number}> = [];
+  const breakdown: Array<{
+    tier: number;
+    miles: number;
+    rate: number;
+    cost: number;
+  }> = [];
   let remainingMiles = miles;
   let tierIndex = 0;
 
   for (const tier of parameters.mileageTierRates) {
     if (remainingMiles <= 0) break;
 
-    const maxMilesInTier = tier.max === Infinity 
-      ? remainingMiles 
-      : Math.min(remainingMiles, tier.max - tier.min + 1);
-    
+    const maxMilesInTier =
+      tier.max === Infinity
+        ? remainingMiles
+        : Math.min(remainingMiles, tier.max - tier.min + 1);
+
     const milesInTier = Math.min(remainingMiles, maxMilesInTier);
     const cost = milesInTier * tier.rate;
 
@@ -71,7 +78,7 @@ export function getMileageBreakdown(
       tier: tierIndex + 1,
       miles: milesInTier,
       rate: tier.rate,
-      cost: cost
+      cost: cost,
     });
 
     remainingMiles -= milesInTier;
@@ -79,4 +86,4 @@ export function getMileageBreakdown(
   }
 
   return breakdown;
-} 
+}
