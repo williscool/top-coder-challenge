@@ -54,7 +54,43 @@ Efficiency Range | Cases | Avg $/Day | Pattern
 
 *Source: Receipt impact analysis showing similar trip parameters with varying receipt amounts*
 
-### 4. Special Cases and Bonuses
+### 4. Technical Analysis Tools
+
+The investigation utilized custom Python scripts to analyze the historical data and validate patterns. The main analysis script (`analyze_data.py`) provided critical insights through several key analyses:
+
+#### Duration-Based Analysis
+```python
+# Grouped cases by trip duration and calculated:
+- Average total reimbursement per duration
+- Per-day rates for each duration category
+- Example cases for each duration bucket
+```
+
+#### Base Rate and Mileage Pattern Analysis
+```python
+# For 1-day trips:
+- Extracted base rate (~$100/day)
+- Calculated implied mileage rates
+- Identified non-linear mileage compensation
+```
+
+#### 5-Day Bonus Investigation
+```python
+# For 5-day trips:
+- Calculated bonus amounts over base rate
+- Analyzed efficiency (miles/day) correlation
+- Validated Lisa's observation about 5-day bonuses
+```
+
+The script's output helped confirm several key findings:
+1. The non-linear per-day rates for different trip durations
+2. The existence of the 5-day trip bonus
+3. The relationship between efficiency (miles/day) and reimbursement amounts
+4. Base rate components and their variations
+
+*Source: analyze_data.py - Custom analysis script processing public_cases.json*
+
+### 5. Special Cases and Bonuses
 
 #### 5-Day Trip Bonus (Confirmed)
 - **Lisa (Accounting)**: "5-day trips almost always get a bonus. Not exactly sure how much, but it's consistent."
