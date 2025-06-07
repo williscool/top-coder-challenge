@@ -2,15 +2,16 @@
 
 import {ReimbursementCalculator} from './calculator';
 import {AdvancedPolynomialReimbursementCalculator} from './advanced-polynomial-calculator';
+import {EnhancedPolynomialReimbursementCalculator} from './proposed_solution_update_1_investigation/enhanced-polynomial-calculator';
 import * as fs from 'fs';
 
 // Global trained calculator instance (singleton pattern for performance)
-let trainedCalculator: AdvancedPolynomialReimbursementCalculator | null = null;
+let trainedCalculator: EnhancedPolynomialReimbursementCalculator | null = null;
 
 /**
- * Get or create a trained advanced polynomial calculator
+ * Get or create a trained enhanced polynomial calculator
  */
-function getTrainedCalculator(): AdvancedPolynomialReimbursementCalculator {
+function getTrainedCalculator(): EnhancedPolynomialReimbursementCalculator {
   if (trainedCalculator === null) {
     // Load training data and train the model
     try {
@@ -24,7 +25,7 @@ function getTrainedCalculator(): AdvancedPolynomialReimbursementCalculator {
         expected: testCase.expected_output
       }));
 
-      trainedCalculator = new AdvancedPolynomialReimbursementCalculator();
+      trainedCalculator = new EnhancedPolynomialReimbursementCalculator();
       // Train silently (no console output for CLI usage)
       const originalLog = console.log;
       console.log = () => {}; // Suppress training output
@@ -33,12 +34,12 @@ function getTrainedCalculator(): AdvancedPolynomialReimbursementCalculator {
 
     } catch (error) {
       // Fallback to original calculator if training fails
-      console.error('Warning: Failed to load advanced polynomial calculator, using original');
+      console.error('Warning: Failed to load enhanced polynomial calculator, using original');
       return new ReimbursementCalculator() as any;
     }
   }
   
-  return trainedCalculator;
+  return trainedCalculator!; // Non-null assertion since we just created it
 }
 
 /**

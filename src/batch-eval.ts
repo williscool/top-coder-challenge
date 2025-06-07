@@ -3,6 +3,7 @@
 import * as fs from 'fs';
 import { ReimbursementCalculator } from './calculator';
 import { AdvancedPolynomialReimbursementCalculator } from './advanced-polynomial-calculator';
+import { EnhancedPolynomialReimbursementCalculator } from './proposed_solution_update_1_investigation/enhanced-polynomial-calculator';
 
 interface TestCase {
   input: {
@@ -27,8 +28,8 @@ function main() {
       expected: testCase.expected_output
     }));
 
-    console.error('🧮 Training advanced polynomial calculator...');
-    const calculator = new AdvancedPolynomialReimbursementCalculator();
+    console.error('🧮 Training enhanced polynomial calculator (best for exact matches)...');
+    const calculator = new EnhancedPolynomialReimbursementCalculator();
     calculator.train(trainingData);
     console.error('✅ Training complete!\n');
 

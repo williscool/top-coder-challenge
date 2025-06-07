@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 
 import * as fs from 'fs';
-import { AdvancedPolynomialReimbursementCalculator } from './advanced-polynomial-calculator';
+import { AdvancedPolynomialReimbursementCalculator } from '../advanced-polynomial-calculator';
 
 interface TestCase {
   input: {
