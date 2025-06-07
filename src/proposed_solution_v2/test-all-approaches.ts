@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { AdvancedPolynomialReimbursementCalculator } from '../advanced-polynomial-calculator';
 import { EnhancedPolynomialReimbursementCalculator } from './enhanced-polynomial-calculator';
 import { RefinedPolynomialReimbursementCalculator } from './refined-polynomial-calculator';
+import { BalancedPolynomialReimbursementCalculator } from './balanced-polynomial-calculator';
 
 interface TestCase {
   input: {
@@ -76,8 +77,8 @@ function evaluateCalculator(calculator: any, testData: TestCase[], name: string)
 }
 
 function main() {
-  console.log('🏆 Comprehensive Calculator Performance Comparison');
-  console.log('================================================\n');
+  console.log('🏆 Comprehensive Calculator Performance Comparison (Including Balanced)');
+  console.log('======================================================================\n');
 
   // Load test cases
   const testData: TestCase[] = JSON.parse(fs.readFileSync('public_cases.json', 'utf8'));
@@ -106,6 +107,11 @@ function main() {
   refinedCalculator.train(trainingData);
   console.log('✅ Refined complete!\n');
 
+  console.log('🔧 Training Balanced Polynomial...');
+  const balancedCalculator = new BalancedPolynomialReimbursementCalculator();
+  balancedCalculator.train(trainingData);
+  console.log('✅ Balanced complete!\n');
+
   console.log('📊 Evaluating all calculators...\n');
   
   // Evaluate all calculators (suppress console.log during evaluation)
@@ -115,6 +121,7 @@ function main() {
   const originalResults = evaluateCalculator(originalCalculator, testData, 'Original');
   const enhancedResults = evaluateCalculator(enhancedCalculator, testData, 'Enhanced');
   const refinedResults = evaluateCalculator(refinedCalculator, testData, 'Refined');
+  const balancedResults = evaluateCalculator(balancedCalculator, testData, 'Balanced');
   
   console.log = originalLog; // Restore console.log
 
@@ -123,11 +130,11 @@ function main() {
   console.log('========================');
   console.log();
   
-  const results = [originalResults, enhancedResults, refinedResults];
+  const results = [originalResults, enhancedResults, refinedResults, balancedResults];
   
   // Header
-  console.log('Calculator      | Exact | Close | Avg Error | Max Error |   Score   ');
-  console.log('----------------|-------|-------|-----------|-----------|----------');
+  console.log('Calculator      | Exact | Close | Avg Error | Max Error |   Score   | Close %');
+  console.log('----------------|-------|-------|-----------|-----------|----------|--------');
   
   // Results table
   results.forEach(r => {
@@ -137,8 +144,9 @@ function main() {
     const avgErr = `$${r.avgError.toFixed(2)}`.padStart(9);
     const maxErr = `$${r.maxError.toFixed(2)}`.padStart(9);
     const score = `${r.score.toFixed(2)}`.padStart(9);
+    const closePct = `${r.closePct.toFixed(1)}%`.padStart(7);
     
-    console.log(`${name} | ${exact} | ${close} | ${avgErr} | ${maxErr} | ${score}`);
+    console.log(`${name} | ${exact} | ${close} | ${avgErr} | ${maxErr} | ${score} | ${closePct}`);
   });
   
   console.log();

@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import { ReimbursementCalculator } from './calculator';
 import { AdvancedPolynomialReimbursementCalculator } from './advanced-polynomial-calculator';
-import { EnhancedPolynomialReimbursementCalculator } from './proposed_solution_update_1_investigation/enhanced-polynomial-calculator';
+import { KNNReimbursementCalculator } from './proposed_solution_v2/knn-calculator';
 
 interface TestCase {
   input: {
@@ -28,8 +28,8 @@ function main() {
       expected: testCase.expected_output
     }));
 
-    console.error('🧮 Training enhanced polynomial calculator (best for exact matches)...');
-    const calculator = new EnhancedPolynomialReimbursementCalculator();
+    console.error('🏆 Training Advanced KNN calculator (best overall performance: 14 close matches, $54.40 avg error)...');
+    const calculator = new KNNReimbursementCalculator();
     calculator.train(trainingData);
     console.error('✅ Training complete!\n');
 
@@ -53,7 +53,7 @@ function main() {
       const expected = testCase.expected_output;
       
       try {
-        const actual = calculator.calculateReimbursement(
+        const actual = calculator.calculateReimbursementAdvanced(
           trip_duration_days,
           miles_traveled,
           total_receipts_amount

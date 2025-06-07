@@ -19,10 +19,15 @@ This directory contains the various algorithm implementations we tested during t
 - `test-decision-tree.ts` - Test script for the decision tree approach  
 - **Result**: $781 average error (worse than polynomial)
 
-### Advanced Polynomial Approach (CURRENT)
+### Advanced Polynomial Approach
 - `test-advanced-polynomial.ts` - Test script for the advanced polynomial approach
-- **Note**: The actual `advanced-polynomial-calculator.ts` remains in `src/` as it's the current production implementation
+- **Note**: The actual `advanced-polynomial-calculator.ts` remains in `src/` 
 - **Result**: $85.44 average error (92% improvement over original)
+
+### Advanced K-Nearest Neighbors (CURRENT)
+- **Location**: `src/proposed_solution_v2/knn-calculator.ts` - **PRODUCTION IMPLEMENTATION**
+- **Result**: 14 close matches (1.4%), $54.40 average error (95% improvement over original)
+- **Performance**: Best overall performer with 36% better average error than polynomial approaches
 
 ## Usage
 
@@ -48,4 +53,5 @@ npx ts-node src/algorithm_approaches/test-advanced-polynomial.ts
 2. **Basic Polynomial**: $187.75 average error (82% improvement)
 3. **Lookup Tables**: $1,031 average error (regression)
 4. **Decision Tree**: $781 average error (better than lookup, worse than polynomial)
-5. **Advanced Polynomial**: $85.44 average error (92% improvement) - **CURRENT** 
+5. **Advanced Polynomial**: $85.44 average error (92% improvement)
+6. **Advanced KNN**: $54.40 average error, 14 close matches (95% improvement) - **CURRENT** 

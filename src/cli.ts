@@ -2,16 +2,16 @@
 
 import {ReimbursementCalculator} from './calculator';
 import {AdvancedPolynomialReimbursementCalculator} from './advanced-polynomial-calculator';
-import {EnhancedPolynomialReimbursementCalculator} from './proposed_solution_update_1_investigation/enhanced-polynomial-calculator';
+import {KNNReimbursementCalculator} from './proposed_solution_v2/knn-calculator';
 import * as fs from 'fs';
 
 // Global trained calculator instance (singleton pattern for performance)
-let trainedCalculator: EnhancedPolynomialReimbursementCalculator | null = null;
+let trainedCalculator: KNNReimbursementCalculator | null = null;
 
 /**
- * Get or create a trained enhanced polynomial calculator
+ * Get or create a trained Advanced KNN calculator
  */
-function getTrainedCalculator(): EnhancedPolynomialReimbursementCalculator {
+function getTrainedCalculator(): KNNReimbursementCalculator {
   if (trainedCalculator === null) {
     // Load training data and train the model
     try {
@@ -25,7 +25,7 @@ function getTrainedCalculator(): EnhancedPolynomialReimbursementCalculator {
         expected: testCase.expected_output
       }));
 
-      trainedCalculator = new EnhancedPolynomialReimbursementCalculator();
+      trainedCalculator = new KNNReimbursementCalculator();
       // Train silently (no console output for CLI usage)
       const originalLog = console.log;
       console.log = () => {}; // Suppress training output
@@ -34,7 +34,7 @@ function getTrainedCalculator(): EnhancedPolynomialReimbursementCalculator {
 
     } catch (error) {
       // Fallback to original calculator if training fails
-      console.error('Warning: Failed to load enhanced polynomial calculator, using original');
+      console.error('Warning: Failed to load Advanced KNN calculator, using original');
       return new ReimbursementCalculator() as any;
     }
   }
@@ -80,9 +80,9 @@ async function main(): Promise<void> {
       throw new Error('Error: Receipt amount cannot be negative');
     }
 
-    // Use trained polynomial calculator
+    // Use trained Advanced KNN calculator
     const calculator = getTrainedCalculator();
-    const reimbursement = calculator.calculateReimbursement(
+    const reimbursement = calculator.calculateReimbursementAdvanced(
       days,
       miles,
       receipts,
