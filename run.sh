@@ -31,6 +31,15 @@ if [ $# -ne 3 ]; then
     exit 1
 fi
 
-yarn
+# Only install dependencies if node_modules doesn't exist
+if [ ! -d "node_modules" ]; then
+    yarn
+fi
 
-yarn start "$1" "$2" "$3" 
+# Use compiled JavaScript instead of ts-node for better performance
+if [ -f "build/src/cli.js" ]; then
+    node build/src/cli.js "$1" "$2" "$3"
+else
+    # Fallback to ts-node if compiled version doesn't exist
+    yarn start "$1" "$2" "$3"
+fi 

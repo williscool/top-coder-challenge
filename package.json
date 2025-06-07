@@ -18,7 +18,9 @@
     "fix": "gts fix",
     "prepare": "yarn run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "eval": "ts-node src/batch-eval.ts",
+    "eval:fast": "./fast-eval.sh"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
