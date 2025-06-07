@@ -88,3 +88,101 @@ When you're ready to submit:
 ---
 
 **Good luck and Bon Voyage!**
+
+# Legacy Reimbursement System Recreation
+
+This project recreates the legacy reimbursement system based on the provided interviews and test cases.
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- npm (comes with Node.js)
+
+## Installation
+
+1. Install Node.js and npm:
+   ```bash
+   # macOS
+   brew install node
+
+   # Ubuntu/Debian
+   sudo apt-get install nodejs npm
+
+   # CentOS/RHEL
+   sudo yum install nodejs npm
+   ```
+
+2. Install project dependencies:
+   ```bash
+   npm install
+   ```
+
+## Usage
+
+The reimbursement calculator can be used in two ways:
+
+### Command Line Interface
+
+```bash
+./run.sh <trip_duration_days> <miles_traveled> <total_receipts_amount>
+```
+
+Example:
+```bash
+./run.sh 5 250 150.75
+```
+
+### Programmatic Usage
+
+```typescript
+import { ReimbursementCalculator } from './src';
+
+const calculator = new ReimbursementCalculator();
+const result = calculator.calculate({
+  tripDurationDays: 5,
+  milesTraveled: 250,
+  totalReceiptsAmount: 150.75
+});
+
+console.log(result);
+```
+
+## Development
+
+1. Install development dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Compile TypeScript:
+   ```bash
+   npm run compile
+   ```
+
+3. Run tests:
+   ```bash
+   npm test
+   ```
+
+4. Run linting:
+   ```bash
+   npm run lint
+   ```
+
+## Project Structure
+
+- `src/` - Source code
+  - `components/` - Individual calculation components
+  - `calculator.ts` - Main calculator class
+  - `constants.ts` - Configuration constants
+  - `cli.ts` - Command line interface
+  - `index.ts` - Main entry point
+- `docs/` - Documentation
+  - `proposed_solution.md` - Detailed solution documentation
+- `public_cases.json` - Test cases
+- `run.sh` - CLI script
+- `eval.sh` - Evaluation script
+
+## License
+
+Apache-2.0

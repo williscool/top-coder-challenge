@@ -1,7 +1,7 @@
 {
-  "name": "",
-  "version": "0.0.0",
-  "description": "",
+  "name": "reimbursement-calculator",
+  "version": "0.0.1",
+  "description": "Legacy Reimbursement System Recreation",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "files": [
@@ -26,10 +26,10 @@
     "gts": "^6.0.2",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "jest": "^29.7.0",
-    "ts-node": "^10.9.2"
+    "@types/node": "^22.7.5"
   }
 }
