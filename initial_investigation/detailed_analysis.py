@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+DEPRECATED: This script has been migrated to TypeScript.
+See src/analysis.ts for the current implementation.
+"""
+
 import json
 import statistics
 from collections import defaultdict
