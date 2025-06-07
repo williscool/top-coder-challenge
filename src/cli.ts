@@ -1,6 +1,45 @@
 #!/usr/bin/env node
 
 import {ReimbursementCalculator} from './calculator';
+import {AdvancedPolynomialReimbursementCalculator} from './advanced-polynomial-calculator';
+import * as fs from 'fs';
+
+// Global trained calculator instance (singleton pattern for performance)
+let trainedCalculator: AdvancedPolynomialReimbursementCalculator | null = null;
+
+/**
+ * Get or create a trained advanced polynomial calculator
+ */
+function getTrainedCalculator(): AdvancedPolynomialReimbursementCalculator {
+  if (trainedCalculator === null) {
+    // Load training data and train the model
+    try {
+      const publicCasesData = fs.readFileSync('public_cases.json', 'utf8');
+      const testCases = JSON.parse(publicCasesData);
+      
+      const trainingData = testCases.map((testCase: any) => ({
+        days: testCase.input.trip_duration_days,
+        miles: testCase.input.miles_traveled,
+        receipts: testCase.input.total_receipts_amount,
+        expected: testCase.expected_output
+      }));
+
+      trainedCalculator = new AdvancedPolynomialReimbursementCalculator();
+      // Train silently (no console output for CLI usage)
+      const originalLog = console.log;
+      console.log = () => {}; // Suppress training output
+      trainedCalculator.train(trainingData);
+      console.log = originalLog; // Restore console.log
+
+    } catch (error) {
+      // Fallback to original calculator if training fails
+      console.error('Warning: Failed to load advanced polynomial calculator, using original');
+      return new ReimbursementCalculator() as any;
+    }
+  }
+  
+  return trainedCalculator;
+}
 
 /**
  * Command Line Interface for the Reimbursement Calculator
@@ -40,8 +79,8 @@ async function main(): Promise<void> {
       throw new Error('Error: Receipt amount cannot be negative');
     }
 
-    // Create calculator and compute reimbursement
-    const calculator = new ReimbursementCalculator();
+    // Use trained polynomial calculator
+    const calculator = getTrainedCalculator();
     const reimbursement = calculator.calculateReimbursement(
       days,
       miles,

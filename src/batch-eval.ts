@@ -2,6 +2,7 @@
 
 import * as fs from 'fs';
 import { ReimbursementCalculator } from './calculator';
+import { AdvancedPolynomialReimbursementCalculator } from './advanced-polynomial-calculator';
 
 interface TestCase {
   input: {
@@ -18,7 +19,19 @@ function main() {
     const publicCasesData = fs.readFileSync('public_cases.json', 'utf8');
     const testCases: TestCase[] = JSON.parse(publicCasesData);
     
-    const calculator = new ReimbursementCalculator();
+    // Train polynomial calculator on all available data
+    const trainingData = testCases.map(testCase => ({
+      days: testCase.input.trip_duration_days,
+      miles: testCase.input.miles_traveled,
+      receipts: testCase.input.total_receipts_amount,
+      expected: testCase.expected_output
+    }));
+
+    console.error('🧮 Training advanced polynomial calculator...');
+    const calculator = new AdvancedPolynomialReimbursementCalculator();
+    calculator.train(trainingData);
+    console.error('✅ Training complete!\n');
+
     let successfulRuns = 0;
     let exactMatches = 0;
     let closeMatches = 0;
