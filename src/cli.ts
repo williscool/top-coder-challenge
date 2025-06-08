@@ -3,15 +3,16 @@
 import {ReimbursementCalculator} from './calculator';
 import {AdvancedPolynomialReimbursementCalculator} from './advanced-polynomial-calculator';
 import {KNNReimbursementCalculator} from './proposed_solution_v2/knn-calculator';
+import {Calculator1965Advanced} from './proposed_solution_v3/calculator-1965-advanced';
 import * as fs from 'fs';
 
 // Global trained calculator instance (singleton pattern for performance)
-let trainedCalculator: KNNReimbursementCalculator | null = null;
+let trainedCalculator: Calculator1965Advanced | null = null;
 
 /**
- * Get or create a trained Advanced KNN calculator
+ * Get or create a trained 1965-advanced calculator (5 exact matches!)
  */
-function getTrainedCalculator(): KNNReimbursementCalculator {
+function getTrainedCalculator(): Calculator1965Advanced {
   if (trainedCalculator === null) {
     // Load training data and train the model
     try {
@@ -25,21 +26,30 @@ function getTrainedCalculator(): KNNReimbursementCalculator {
         expected: testCase.expected_output
       }));
 
-      trainedCalculator = new KNNReimbursementCalculator();
-      // Train silently (no console output for CLI usage)
+      // Suppress ALL console output during initialization and training
       const originalLog = console.log;
-      console.log = () => {}; // Suppress training output
+      const originalError = console.error;
+      const originalWarn = console.warn;
+      console.log = () => {}; // Suppress all console.log
+      console.error = () => {}; // Suppress all console.error  
+      console.warn = () => {}; // Suppress all console.warn
+      
+      trainedCalculator = new Calculator1965Advanced();
       trainedCalculator.train(trainingData);
-      console.log = originalLog; // Restore console.log
+      
+      // Restore console methods
+      console.log = originalLog;
+      console.error = originalError;
+      console.warn = originalWarn;
 
     } catch (error) {
       // Fallback to original calculator if training fails
-      console.error('Warning: Failed to load Advanced KNN calculator, using original');
+      console.error('Warning: Failed to load 1965-advanced calculator, using original');
       return new ReimbursementCalculator() as any;
     }
   }
   
-  return trainedCalculator!; // Non-null assertion since we just created it
+  return trainedCalculator; // Now properly typed as Calculator1965Advanced
 }
 
 /**
@@ -80,9 +90,9 @@ async function main(): Promise<void> {
       throw new Error('Error: Receipt amount cannot be negative');
     }
 
-    // Use trained Advanced KNN calculator
+    // Use trained 1965-advanced calculator (5 exact matches!)
     const calculator = getTrainedCalculator();
-    const reimbursement = calculator.calculateReimbursementAdvanced(
+    const reimbursement = calculator.calculateReimbursement(
       days,
       miles,
       receipts,
